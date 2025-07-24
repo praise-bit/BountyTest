@@ -1,38 +1,105 @@
-# React-Express-Node Starter
+Decentralized Invoice Verification System
 
-Starter project for building apps with React, NodeJS and ExpressJS with Hot Module Reloading.
+A hybrid full-stack ERP/CRM extension that enables on-chain invoice integrity verification using Solidity smart contracts, MongoDB, Ethers.js, and a custom Node.js backend.
+Designed to simulate a decentralized audit trail for B2B invoicing, using blockchain as a trust layer.
 
-Like this starter project? [⭐️ it on Github](https://github.com/abinavseelan/React-Express-Node-Starter) to support it! 😄
+⸻
 
-## Development
+📦 Tech Stack
+	•	Frontend: React + TailwindCSS (CodeSandbox)
+	•	Backend: Node.js + Express + MongoDB
+	•	Blockchain: Solidity (Hardhat), Ethers.js
+	•	Storage: Hashing (SHA-256), optional IPFS (not implemented)
+	•	Deployment (Chain): Sepolia Testnet (via Alchemy)
+    PROJECT STRUCTURE
+    ontracts/
+│   └── InvoiceRegistry.sol     # Smart contract for invoice hash storage
+├── backend/
+│   ├── routes/
+│   ├── models/                 # Invoice Mongoose schema
+│   └── controllers/
+├── frontend/
+│   ├── components/
+│   └── pages
 
-To run the development build, run `npm run start:dev`.
+         
+         Smart Contract
 
-The server is automatically built and reloaded using nodemon, and the client is Hot-module-reloaded. The client is avialable on port `9000` and the server APIs are available on port `9001`.
+File: contracts/InvoiceRegistry.sol
+Handles storing and verifying SHA-256 hashes of invoices on-chain.
 
-### Production
+       Deployed Address
 
-To build this project for production, run `npm start`.
 
-This will build the client and server files, and start the server on port `9001`
+       ABI
 
-## FAQ
+       Clone the repo
+       git clone https://github.com/praise-bit/invoice-registry
+cd invoice-registry
+             Backend setup
+ cd backend
+npm install
+touch .env
+# Add the following:
+# MONGO_URI=your_mongodb_uri
+# PRIVATE_KEY=your_wallet_private_key
+# ALCHEMY_API_URL=https://eth-sepolia.g.alchemy.com/v2/your-api-key
 
-### I don't want to transpile my server files
+npx hardhat compile
+npx hardhat run scripts/deploy.js --network sepolia
+(All in the files)
 
-This project transpiles the server files into a `server.bundle.js`. This is for those who want to use unsupported ESNext features in Node, such as ES Modules, or for those who want to add in type checking via Typescript or FlowType.
+cd ../frontend
+npm install
+touch .env
+# Add:
+# VITE_CONTRACT_ADDRESS=0xYourDeployedContractAddress
+# VITE_ABI=Your_ABI_JSON_string (or load from a file)
+# VITE_BACKEND_URL=http://localhost:5000
 
-If you don't want your server files transpiled/compiled through webpack, edit the following:
+npm run dev
+          (All in the files)
 
-- In `package.json` _scripts_ section
-  - Remove `start:server` and `build:server`.
-  - Change `start:dev` to `"concurrently 'npm run start:client' 'nodemon server/index.js'"`
-  - Change `start` to `"concurrently 'npm run build:client' 'NODE_ENV=production node server/index.js"`
-- In `server/index.js`
-  - Modify `import express from 'express` to `const express = require('express')` on line 1.
 
-### I don't want my server to serve my client bundle in production / I want to upload my client to a CDN
+          Known Issues & Assumptions
+	•	⚠️ MetaMask not working in browser-based sandbox: Contract interactions were simulated via backend using Hardhat and exposed APIs.
+	•	✅ Workaround: Ethers.js + Alchemy for signing & interaction.
+	•	🧪 Testing was kept minimal due to system restrictions.
+	•	🔒 Contract stores SHA-256 hash, not full invoice data for privacy.
+	•	📦 IPFS storage for invoice files was considered but not implemented.
+	•	🔧 Used Alchemy instead of Infura due to API limits.
 
-In production, this project bundles the client and has the server serve both the client as well as the endpoints. If you do not want the API server to serve the client-side code, then make the following change
+⸻
 
-- In `server/index.js`, remove the block containing `express.static('/', 'dist')` (lines 7-9).
+✅ What We Accomplished
+	•	✅ Fully working smart contract on Sepolia
+	•	✅ Frontend integration for “Verify on Blockchain”
+	•	✅ MongoDB backend + invoice hashing
+	•	✅ REST APIs and ABI/contract syncing
+	•	✅ Clean and modular code split for future scaling
+
+⸻
+
+❌ What We Couldn’t Do (Due to Platform Limitations)
+	•	❌ Couldn’t run MetaMask in embedded browser (e.g. CodeSandbox)
+	•	❌ No full-featured test suite or deployment pipeline
+	•	❌ Couldn’t simulate full multi-user invoice flows (lack of persistent hosting)
+
+⸻
+
+💡 Improvements (With More Time or Better Resources)
+	•	📂 Add IPFS or Filecoin for full invoice backup
+	•	🔁 Multi-signature approval flow for invoices
+	•	📊 Dashboard for on-chain vs off-chain invoice insights
+	•	✅ CI/CD pipelines + auto contract verification on Etherscan
+
+⸻
+
+🤝 Special Notes
+	•	Contract deployed using Hardhat + Alchemy, private keys securely injected via .env.
+	•	This was built under tight constraints, including no local VS Code and limited dApp interaction environments.
+Still, the system demonstrates the core concept of decentralized invoice verification with blockchain-backed trust.
+
+
+
+
